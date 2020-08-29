@@ -69,3 +69,100 @@ def recipients_handler(request, id=None):
     if not result:
         return Response(status=status.HTTP_404_NOT_FOUND)
     return Response(result)
+
+
+@api_view(http_method_names=['GET'])
+def product_set_handler(request, id=None):
+    result = None
+    cs = ContentSource()
+    try:
+        foodboxes = cs.request_foodboxes()
+    except ContentSource().Exceptions as ex:
+        return Response(status=ex.status)
+
+    # обработка фильтров
+    if request.query_params:
+        # фильтр минимальной цены
+        min_price = request.query_params.get('min_price')
+        if min_price:
+            result = [{
+                'title': fb['name'],
+                'description': fb['about'],
+                'price': fb['price'],
+                'weight': fb['weight_grams']
+            } for fb in foodboxes if fb['price'] < int(min_price)]
+            return Response(result)
+        # фильтр минимальго веса
+        min_weight = request.query_params.get('min_weight')
+        if min_weight:
+            result = [{
+                'title': fb['name'],
+                'description': fb['about'],
+                'price': fb['price'],
+                'weight': fb['weight_grams']
+            } for fb in foodboxes if fb['weight_grams'] < int(min_weight)]
+            return Response(result)
+    if not id:
+        # Запрос всего списка наборов
+        result = [{
+            'title': fb['name'],
+            'description': fb['about'],
+            'price': fb['price'],
+            'weight': fb['weight_grams']
+        } for fb in foodboxes]
+        return Response(result)
+    else:
+        # Запрос конкретного набора
+        for fb in foodboxes:
+            if fb['inner_id'] == id:
+                result = {
+                    'title': fb['name'],
+                    'description': fb['about'],
+                    'price': fb['price'],
+                    'weight': fb['weight_grams']
+                }
+                return Response(result)
+    # ни один из кейсов не сработал
+    return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(http_method_names=['GET'])
+def product_set_min_price_handler(request):
+    result = []
+    if request.query_params:
+        min_price = request.query_params.get('min_price')
+        if min_price:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    cs = ContentSource()
+    try:
+        foodboxes = cs.request_foodboxes()
+    except ContentSource().Exceptions as ex:
+        return Response(status=ex.status)
+    result = [{
+        'title': fb['name'],
+        'description': fb['about'],
+        'price': fb['price'],
+        'weight': fb['weight_grams']
+    } for fb in foodboxes if fb['price'] < min_price]
+    return Response(result)
+
+
+@api_view(http_method_names=['GET'])
+def product_set_min_weight_handler(request):
+    result = []
+    if request.query_params:
+        min_weight = request.query_params.get('min_weight')
+        if not min_weight:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    cs = ContentSource()
+    try:
+        foodboxes = cs.request_foodboxes()
+    except ContentSource().Exceptions as ex:
+        return Response(status=ex.status)
+    result = [{
+        'title': fb['name'],
+        'description': fb['about'],
+        'price': fb['price'],
+        'weight': fb['weight_grams']
+    } for fb in foodboxes if fb['weight_grams'] < min_weight]
+    return Response(result)

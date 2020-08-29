@@ -15,9 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from foodboxes.views import recipients_handler
+
+from foodboxes.views import recipients_handler, product_set_handler
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('recipients/', recipients_handler, name='recipients-list'),
     path('recipients/<int:id>/', recipients_handler, name='recipient-detail'),
+    path('product-sets/', product_set_handler, name='product-sets'),
+    path('product-sets/<int:id>/', product_set_handler, name='product-sets-detail'),
 ]
