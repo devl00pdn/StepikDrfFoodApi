@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from foodboxes.views import recipients_handler
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('recipients/', recipients_handler, name='recipients-list'),
+    path('recipients/<int:id>/', recipients_handler, name='recipient-detail'),
 ]
