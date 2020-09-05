@@ -5,3 +5,8 @@ Training project for [django rest framework course on the Stepik](<https://stepi
 ## Dependencies
 
 All requirements are listed in the file: `requirements.txt`.
+
+
+## Test  
+
+Run ```pytest -v``` in project root directory 
