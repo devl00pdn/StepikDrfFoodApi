@@ -105,7 +105,7 @@ def all_products_handler(request):
         min_weight = int(request.query_params.get('min_weight')) if request.query_params.get('min_weight') else None
         min_price = int(request.query_params.get('min_price')) if request.query_params.get('min_price') else None
         if min_weight:
-            result = [item for item in result if item['weight'] < min_weight]
+            result = [item for item in result if item['weight'] >= min_weight]
         if min_price:
-            result = [item for item in result if item['price'] < min_price]
+            result = [item for item in result if item['price'] >= min_price]
     return Response(result)
