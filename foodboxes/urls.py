@@ -20,7 +20,7 @@ from foodboxes.views import recipients_handler, all_products_handler, specific_p
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('recipients/', recipients_handler, name='recipients-list'),
-    path('recipients/<int:id>/', recipients_handler, name='recipient-detail'),
+    path('recipients/<int:pk>/', recipients_handler, name='recipient-detail'),
     path('product-sets/', all_products_handler, name='products-list'),
-    path('product-sets/<int:id>/', specific_product_handler, name='product-detail'),
+    path('product-sets/<int:pk>/', specific_product_handler, name='product-detail'),
 ]
