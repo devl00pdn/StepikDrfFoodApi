@@ -15,8 +15,11 @@ Including another URLconf
 """
 from rest_framework.routers import DefaultRouter
 
-from foodboxes.views import ProductSetsViewSet
+from foodboxes.views import ProductSetsViewSet, RecipientViewSet, OrdersViewSet
 
 router = DefaultRouter()
 router.register('product-sets', ProductSetsViewSet, basename='productsets')
+router.register('recipients', RecipientViewSet, basename='recipient')
+router.register('orders', OrdersViewSet, basename='order')
+
 urlpatterns = router.urls
