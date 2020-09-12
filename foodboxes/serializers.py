@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from rest_framework.fields import DateTimeField
 from rest_framework.serializers import HyperlinkedModelSerializer
 from rest_framework.validators import UniqueTogetherValidator, ValidationError
 
@@ -26,7 +29,11 @@ class RecipientSerializer(HyperlinkedModelSerializer):
     def validate(self, attrs):
         # Валидируем ФИО
         fields = ['surname', 'name', 'patronymic']
+        # Достаём поля из запроса
         name_parts = {part: attrs[part] for part in fields if part in attrs}
+        # Подсатавляем недостающие поля из обьекта модели
+        recipient = self.instance
+        name_parts.update({part: getattr(recipient, part) for part in fields if part not in name_parts.keys()})
         if len(name_parts) > 1:
             name_parts_pairs = list(name_parts.items())
             for index in range(len(name_parts)):
@@ -71,6 +78,8 @@ class ProductSetsSerializer(HyperlinkedModelSerializer):
 
 
 class OrderSerializer(HyperlinkedModelSerializer):
+    delivery_datetime = DateTimeField(input_formats=["%d-%m-%Y %H:%M"])
+
     class Meta:
         model = Order
         fields = [
@@ -82,3 +91,13 @@ class OrderSerializer(HyperlinkedModelSerializer):
             'product_set',
             'status'
         ]
+
+    def validate_delivery_datetime(self, delivery_datetime: datetime):
+        # Время доставки не может быть меньше настоящего времени
+        dt = delivery_datetime - datetime.now(tz=delivery_datetime.tzinfo)
+        if dt.days < 0:
+            raise ValidationError(
+                detail='delivery date and time cannot be less than actual time',
+                code=400
+            )
+        return delivery_datetime

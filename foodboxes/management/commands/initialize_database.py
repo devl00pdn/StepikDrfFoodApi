@@ -1,8 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from random import randint
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+
 from foodboxes.models import ProductSets, Recipient, Order
 from proxy.content import ContentSource, ContentSourceException
 
