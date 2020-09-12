@@ -28,5 +28,5 @@ class Order(models.Model):
     order_created_datetime = models.DateTimeField(auto_now=True)
     delivery_datetime = models.DateTimeField()
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE, related_name='orders')
-    product_set = models.ForeignKey(ProductSets, on_delete=models.CASCADE, related_name='orders')
+    product_set = models.ForeignKey(ProductSets, on_delete=models.PROTECT, related_name='orders')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_CREATED)

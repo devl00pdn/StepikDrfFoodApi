@@ -4,7 +4,40 @@ from rest_framework.fields import DateTimeField
 from rest_framework.serializers import HyperlinkedModelSerializer
 from rest_framework.validators import UniqueTogetherValidator, ValidationError
 
+from validators.name import validate_name
 from .models import Recipient, ProductSets, Order
+
+
+class RecipientNameSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = Recipient
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Recipient.objects.all(),
+                fields=['surname', 'name', 'patronymic']
+            )
+        ]
+        fields = [
+            'id',
+            'url',
+            'surname',
+            'name',
+            'patronymic',
+        ]
+
+    def validate(self, attrs):
+        validate_name(attrs, self.instance)
+        return attrs
+
+
+class RecipientDeliveryAddressSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = Recipient
+        fields = [
+            'id',
+            'url',
+            'delivery_address',
+        ]
 
 
 class RecipientSerializer(HyperlinkedModelSerializer):
@@ -27,21 +60,7 @@ class RecipientSerializer(HyperlinkedModelSerializer):
         ]
 
     def validate(self, attrs):
-        # Валидируем ФИО
-        fields = ['surname', 'name', 'patronymic']
-        # Достаём поля из запроса
-        name_parts = {part: attrs[part] for part in fields if part in attrs}
-        # Подсатавляем недостающие поля из обьекта модели
-        recipient = self.instance
-        name_parts.update({part: getattr(recipient, part) for part in fields if part not in name_parts.keys()})
-        if len(name_parts) > 1:
-            name_parts_pairs = list(name_parts.items())
-            for index in range(len(name_parts)):
-                if name_parts_pairs[index][1] == name_parts_pairs[index - 1][1]:
-                    raise ValidationError(
-                        detail=f'{name_parts_pairs[index][0]} and {name_parts_pairs[index - 1][0]} mast be different',
-                        code=400,
-                    )
+        validate_name(attrs, self.instance)
         return attrs
 
     def validate_phone_number(self, number):
