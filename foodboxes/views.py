@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from .filters import OrederDateFilter
+from .filters import OrderDateFilter
 from .models import Order, ProductSets, Recipient
 from .serializers import OrderSerializer, ProductSetsSerializer, RecipientSerializer, RecipientNameSerializer, \
     RecipientDeliveryAddressSerializer
@@ -16,7 +16,7 @@ class OrdersViewSet(ModelViewSet):
     serializer_class = OrderSerializer
     filter_backends = [DjangoFilterBackend]
     # Для фильтрации заказов по дате создания: /orders/?published__date=YYYY-MM-DD
-    filterset_class = OrederDateFilter
+    filterset_class = OrderDateFilter
 
     def destroy(self, request, pk=None, *args, **kwargs):
         order = get_object_or_404(self.queryset, pk=pk)
