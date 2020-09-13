@@ -6,6 +6,9 @@ Training project for [django rest framework course on the Stepik](<https://stepi
 
 All requirements are listed in the file: `requirements.txt`.
 
+## Run  
+Fill database before us. In project root directory:  
+```./manage.py initialize_database```
 
 ## Test  
 
