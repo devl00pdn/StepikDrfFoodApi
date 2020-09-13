@@ -15,6 +15,7 @@ class OrdersViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     filter_backends = [DjangoFilterBackend]
+    # Для фильтрации заказов по дате создания: /orders/?published__date=YYYY-MM-DD
     filterset_class = OrederDateFilter
 
     def destroy(self, request, pk=None, *args, **kwargs):

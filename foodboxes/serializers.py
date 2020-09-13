@@ -104,7 +104,7 @@ class OrderSerializer(HyperlinkedModelSerializer):
         fields = [
             'id',
             'url',
-            'order_created_datetime',
+            'published',
             'delivery_datetime',
             'recipient',
             'product_set',
