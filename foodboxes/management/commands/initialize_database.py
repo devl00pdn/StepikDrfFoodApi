@@ -39,4 +39,3 @@ class Command(BaseCommand):
             Order.objects.create(delivery_datetime=timezone.now() + timedelta(hours=1),
                                  recipient=recipient,
                                  product_set=ProductSets.objects.all()[randint(0, len(ProductSets.objects.all()) - 1)])
-

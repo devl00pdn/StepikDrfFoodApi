@@ -1,4 +1,5 @@
-from rest_framework.validators import UniqueTogetherValidator, ValidationError
+from rest_framework.validators import ValidationError
+
 
 def validate_name(attrs, instance):
     fields = ['surname', 'name', 'patronymic']
